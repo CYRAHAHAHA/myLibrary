@@ -1,10 +1,11 @@
 //Constructor
 let myLibrary = [];
-function Book(title, author, pagesNo, read){
+function Book(title, author, pagesNo, read, iD){
     this.title = title;
     this.author = author;
     this.pagesNo = pagesNo;
     this.read = read;
+    this.iD = iD;
 }
 
 const formModal = document.getElementById("form");
@@ -21,11 +22,18 @@ window.onclick = function(event) {
   }
 } 
 
+const printlib = function(){
+  (myLibrary.forEach((element)=>console.log(element)));
+}
+
 const cardSpace = document.getElementById('cardspace'); //the whole screen
 
 const removeCard = (id) => {
   const deleted = document.getElementById(`${id}`);
   deleted.parentNode.removeChild(deleted);  
+  myLibrary = myLibrary.filter((e)=>{
+    return e.iD != id;
+  })
 }
 
 //Adding a new book
@@ -34,7 +42,7 @@ const addNewBookInput = () => {
   const author = document.getElementById('author').value
   const pages = document.getElementById('pages').value
   const isRead = document.getElementById('checkread').checked
-  return new Book(title, author, pages, isRead)
+  return new Book(title, author, pages, isRead, Math.ceil(Math.random()*10000))
 }
 const submitBtn = document.getElementById("submit")
 submitBtn.onclick = () => {
@@ -46,7 +54,7 @@ submitBtn.onclick = () => {
 }
 //create cards
 const createBookCard = (book, number) => {
-  const divID = Math.ceil(Math.random()*10000);
+  const divID = book.iD;
   const bookCard = document.createElement('div');
   const title = document.createElement('h3');
   const author = document.createElement('h3');
@@ -77,7 +85,10 @@ const createBookCard = (book, number) => {
   bookCard.appendChild(removeBtn);
   cardSpace.appendChild(bookCard);
 
-  removeBtn.onclick = () => {removeCard(bookCard.id);}
+  removeBtn.onclick = () => {
+    console.log(myLibrary.indexOf(bookCard));
+    removeCard(bookCard.id);
+  }
   hasread.onclick = () => {
     hasread.textContent = hasread.textContent == 'FINISHED' ? 'NOT FINISHED' : 'FINISHED';
   }
